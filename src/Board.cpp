@@ -3,6 +3,7 @@
 #include <stdexcept>
 
 #include "Board.h"
+#include "helpers/HelperFunctions.h"
 
 void Board::Reset(){
     cells0.reset();
@@ -11,6 +12,7 @@ void Board::Reset(){
     global_boardstate0.reset();
     global_boardstate1.reset();
     global_boardstateD.reset();
+    last_move = -1;
 }
 
 Board::Board(){
@@ -24,10 +26,11 @@ Board::Board(const Board &to_copy){
     global_boardstate0 = to_copy.global_boardstate0;
     global_boardstate1 = to_copy.global_boardstate1;
     global_boardstateD = to_copy.global_boardstateD;
+    last_move = to_copy.last_move;
 }
 
 // todo add check if position is reachable with normal play? or dont?
-Board::Board(const std::string &state_string, int last_move){
+Board::Board(const std::string &state_string, int last_move_num){
     this->Reset();
     int counter = 0;
     for (auto it=state_string.cbegin(); it != state_string.cend(); it++){
@@ -47,6 +50,7 @@ Board::Board(const std::string &state_string, int last_move){
     for (int i=0; i<=81; i+=9){
         UpdateGlobalBoard(i);
     }
+    last_move = last_move_num;
 }
 
 bool Board::CheckWinPatterns(const std::bitset<9> cells){
@@ -119,4 +123,23 @@ BoardState Board::State(){
     else if (CheckWinPatterns(global_boardstate1)) return BoardState::WON_1;
     else if ((global_boardstate0 | global_boardstate1 | global_boardstateD) == 0b111111111) return BoardState::DRAWN;
     else return BoardState::IN_PROGRESS;
+}
+
+int Board::LastMove(){
+    return last_move;
+}
+
+std::bitset<81> Board::PlayableCells(){
+    std::bitset<9> done_boards = global_boardstate0 | global_boardstate1 | global_boardstateD;
+    std::bitset<81> cells = ~this->TakenCells();
+    if (done_boards[last_move % 9]){
+        for (int i=0; i<9; i++){
+            if (done_boards[i]){
+                cells = HelpFun::nullLocalBoard(cells, i);
+            }
+        }
+        return cells;
+    } else {
+        return HelpFun::nullExceptLocalBoard(cells, last_move % 9);
+    }
 }
