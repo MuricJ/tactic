@@ -3,6 +3,16 @@
 #include "../Board.h"
 
 namespace HelpFun{
+    constexpr std::bitset<81> nullMask[9] = {0x000FFFFFFFFFFFFFFFFFF,
+                                            0x1FF007FFFFFFFFFFFFFFF,
+                                            0x1FFFF803FFFFFFFFFFFFF,
+                                            0x1FFFFFFC01FFFFFFFFFFF,
+                                            0x1FFFFFFFFE00FFFFFFFFF,
+                                            0x1FFFFFFFFFFF007FFFFFF,
+                                            0x1FFFFFFFFFFFFF803FFFF,
+                                            0x1FFFFFFFFFFFFFFFC01FF,
+                                            0x1FFFFFFFFFFFFFFFFFE00};
+
     const std::string BOARD_ASCII = 
         " 0 │ 1 │ 2  ║  9 │ 10 │ 11  ║  18 │ 19 │ 20 \n"
         "───┼───┼─── ║ ───┼───┼─── ║ ───┼───┼─── \n"
@@ -24,5 +34,6 @@ namespace HelpFun{
 
     void printBoard(Board to_print);
     std::bitset<81> maskUnavailableMoves(std::bitset<81> cells, int next_board);
+    std::bitset<81> HelpFun::nullLocalBoard(std::bitset<81> cells, int board_num);
 
 }

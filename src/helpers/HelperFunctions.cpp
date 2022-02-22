@@ -17,16 +17,13 @@ void HelpFun::printBoard(Board to_print){
     std::cout << print_str;
 }
 
-std::bitset<81> HelpFun::maskUnavailableMoves(std::bitset<81> cells, int next_board){
-    constexpr std::bitset<81> mask[9] = {0x000FFFFFFFFFFFFFFFFFF,
-                                         0x1FF007FFFFFFFFFFFFFFF,
-                                         0x1FFFF803FFFFFFFFFFFFF,
-                                         0x1FFFFFFC01FFFFFFFFFFF,
-                                         0x1FFFFFFFFE00FFFFFFFFF,
-                                         0x1FFFFFFFFFFF007FFFFFF,
-                                         0x1FFFFFFFFFFFFF803FFFF,
-                                         0x1FFFFFFFFFFFFFFFC01FF,
-                                         0x1FFFFFFFFFFFFFFFFFE00};
-    return cells | mask[next_board];
+
+// set all cells to 1 except local board board_num
+std::bitset<81> HelpFun::maskUnavailableMoves(std::bitset<81> cells, int board_num){
+    return cells | HelpFun::nullMask[board_num];
 }
 
+std::bitset<81> HelpFun::nullLocalBoard(std::bitset<81> cells, int board_num){
+    return cells & HelpFun::nullMask[board_num];
+
+}
