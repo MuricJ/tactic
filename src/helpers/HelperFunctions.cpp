@@ -19,11 +19,15 @@ void HelpFun::printBoard(Board to_print){
 
 
 // set all cells to 1 except local board board_num
-std::bitset<81> HelpFun::maskUnavailableMoves(std::bitset<81> cells, int board_num){
+std::bitset<81> HelpFun::oneExceptLocalBoard(std::bitset<81> cells, int board_num){
     return cells | HelpFun::nullMask[board_num];
 }
 
 std::bitset<81> HelpFun::nullLocalBoard(std::bitset<81> cells, int board_num){
     return cells & HelpFun::nullMask[board_num];
 
+}
+
+std::bitset<81> HelpFun::nullExceptLocalBoard(std::bitset<81> cells, int board_num){
+    return cells & (~HelpFun::nullMask[board_num]);
 }

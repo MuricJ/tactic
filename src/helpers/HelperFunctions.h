@@ -33,7 +33,8 @@ namespace HelpFun{
         " 60 │ 61 │ 62  ║  69 │ 70 │ 71  ║  78 │ 79 │ 80 \n";
 
     void printBoard(Board to_print);
-    std::bitset<81> maskUnavailableMoves(std::bitset<81> cells, int next_board);
+    std::bitset<81> oneExceptLocalBoard(std::bitset<81> cells, int next_board);
     std::bitset<81> HelpFun::nullLocalBoard(std::bitset<81> cells, int board_num);
+    std::bitset<81> HelpFun::nullExceptLocalBoard(std::bitset<81> cells, int board_num);
 
 }
