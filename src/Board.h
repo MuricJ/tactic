@@ -12,8 +12,6 @@ public:
 
     std::string State_String();
     std::bitset<81> TakenCells();
-    std::bitset<81> PlayableCells();
-    int LastMove();
     BoardState State();
     int MoveNumber();
 
@@ -30,7 +28,6 @@ protected:
     std::bitset<9> global_boardstate1;
     std::bitset<9> global_boardstateD;
     int8_t move_num;
-    int8_t last_move;
 
 private:
     constexpr static std::bitset<9> hori1{0b111000000};

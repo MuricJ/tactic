@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include "MemorizeBoard.h"
 #include "Board.h"
+#include "helpers/HelperFunctions.h"
 
 MemorizeBoard::MemorizeBoard() : Board(){
     moves.clear();
@@ -39,4 +40,23 @@ void MemorizeBoard::UndoMove(int to_undo){
         throw std::invalid_argument("to_undo move is not actually the last move. Last move is " + std::to_string(to_undo));
     }
     UndoMoves(1);
+}
+
+int MemorizeBoard::LastMove(){
+    return moves.back();
+}
+
+std::bitset<81> MemorizeBoard::PlayableCells(){
+    std::bitset<9> done_boards = global_boardstate0 | global_boardstate1 | global_boardstateD;
+    std::bitset<81> cells = ~this->TakenCells();
+    if (done_boards[moves.back() % 9]){
+        for (int i=0; i<9; i++){
+            if (done_boards[i]){
+                cells = HelpFun::nullLocalBoard(cells, i);
+            }
+        }
+        return cells;
+    } else {
+        return HelpFun::nullExceptLocalBoard(cells, moves.back() % 9);
+    }
 }
