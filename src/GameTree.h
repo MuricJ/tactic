@@ -44,6 +44,3 @@ private:
     void ExpandCurrentNode();
 
 };
-
-int sequentialMoveGenerator(const ABNode& node);
-
