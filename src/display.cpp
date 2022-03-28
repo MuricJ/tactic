@@ -1,10 +1,10 @@
+
 #include <iostream>
-#include "HelperFunctions.h"
-#include "../Board.h"
+#include "display.h"
+#include "Board.h"
 
-
-void HelpFun::printBoard(Board to_print){
-    std::string print_str = HelpFun::BOARD_ASCII;
+void Display::printBoard(Board to_print){
+    std::string print_str = Display::BOARD_ASCII;
     std::string board_str = to_print.StateString();
     int p;
     for (int i=0; i<81; i++){

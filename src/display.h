@@ -1,7 +1,10 @@
-#pragma once
-#include "../Board.h"
+#ifndef displayGuard
+#define displayGuard
 
-namespace HelpFun{
+#include <iostream>
+#include "Board.h"
+
+namespace Display {
     const std::string BOARD_ASCII = 
         " 0 │ 1 │ 2  ║  9 │ 10 │ 11  ║  18 │ 19 │ 20 \n"
         "───┼───┼─── ║ ───┼───┼─── ║ ───┼───┼─── \n"
@@ -23,3 +26,5 @@ namespace HelpFun{
 
     void printBoard(Board to_print);
 }
+
+#endif
