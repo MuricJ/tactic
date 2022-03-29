@@ -11,6 +11,11 @@ ABTreeTraverser::ABTreeTraverser(Board board, ABNode start_node, int min_allocat
     depth = 0;
     dfs_storage.push_back(start_node);
     dfs_storage.reserve(min_allocate);
+    if (board.MoveNumber() % 2 == 0){
+        dfs_storage.back().value = DOUBLE_MIN;
+    } else {
+        dfs_storage.back().value = DOUBLE_MAX;
+    }
 }
 
 bool ABTreeTraverser::NextChild(){
@@ -27,12 +32,14 @@ bool ABTreeTraverser::NextChild(){
         }
     }
     
-    if (dfs_storage[depth].last_expanded_index == dfs_storage[depth].playable.size()){
+    if (dfs_storage[depth].last_expanded_index == dfs_storage[depth].playable.size() - 1){
         dfs_storage[depth].searched = true;
         return false;
     } else {
         dfs_storage[depth].last_expanded_index++;
-        dfs_storage.push_back(ABNode(dfs_storage[depth].playable[dfs_storage[depth].last_expanded_index], dfs_storage[depth].node_alpha, dfs_storage[depth].node_beta));
+        Move to_play = dfs_storage[depth].playable[dfs_storage[depth].last_expanded_index];
+        dfs_storage.push_back(ABNode(to_play, dfs_storage[depth].node_alpha, dfs_storage[depth].node_beta));
+        current_board.PlayMove(to_play);
         depth++;
         return true;
     }
@@ -44,7 +51,7 @@ void ABTreeTraverser::StaticEval(double (*evalFunc)(Board, Move)){
         // WRITE EXCEPTION HERE
         // StaticEval may not be called on the root node!
     }
-    double eval = evalFunc(current_board, dfs_storage[depth-1].playable[dfs_storage[depth].last_expanded_index]);
+    double eval = evalFunc(current_board, dfs_storage[depth].previousMove);
     dfs_storage[depth].evaluated = true;
     dfs_storage[depth].value = eval;
 
@@ -60,6 +67,15 @@ bool ABTreeTraverser::Back(){
             dfs_storage[depth-1].value = std::min(dfs_storage[depth-1].value, dfs_storage[depth].value);
         }
     }
+    current_board.ClearMove(dfs_storage[depth].previousMove);
     dfs_storage.pop_back();
     depth--;
+}
+
+int ABTreeTraverser::Depth(){
+    return depth;
+}
+
+ABNode& ABTreeTraverser::Current(){
+    return dfs_storage.back();
 }
