@@ -11,12 +11,8 @@
 #include "Engine.h"
 #include "types.h"
 
-MCTSAgent::MCTSAgent(int iterations, void (*node_update_function) (MCTSNode* node, BoardState state),
-                     MCTSNode* (*node_select_function) (MCTSNode* node)) : node_select_function(node_select_function),
-                                                                           node_update_function(node_update_function),
-                                                                           engine(Engine{std::make_unique<RandomAgent>(), std::make_unique<RandomAgent>()}){
-    this->iterations = iterations;
-}
+MCTSAgent::MCTSAgent(int iterations) : engine(std::make_unique<RandomAgent>(), std::make_unique<RandomAgent>()),
+                                       iterations(iterations) { }
 
 MCTSAgent::MCTSAgent(const MCTSAgent& other){
     *this = other;
@@ -37,7 +33,6 @@ std::pair<int, float> MCTSAgent::RunUCT(const BoardData& board) const {
         BoardState playoff_result = this->engine.SinglePlayoff(path.top()->GetState(), false);
         this->Backpropagate(path, playoff_result);
     }
-
     auto move_eval = root->GetMoveEval();
     delete root;
     return move_eval;
@@ -98,5 +93,3 @@ MCTSAgent& MCTSAgent::operator=(const MCTSAgent& other){
     this->iterations = other.iterations;
     return *this;
 }
-
-

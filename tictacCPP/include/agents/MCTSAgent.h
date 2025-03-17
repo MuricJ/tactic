@@ -8,15 +8,9 @@
 #include "Engine.h"
 #include "types.h"
 
-
-
-MCTSNode* highestValueChild(MCTSNode* parent);
-void standardNodeUpdate(MCTSNode* node, BoardState state);
-
 class MCTSAgent : public Agent {
 public:
-    MCTSAgent(int iterations=10000, void (*node_update_function) (MCTSNode* node, BoardState state) = standardNodeUpdate,
-    MCTSNode* (*node_select_function) (MCTSNode* node) = highestValueChild);
+    MCTSAgent(int iterations=10000);
     MCTSAgent(const MCTSAgent& other);
     MCTSAgent& operator=(const MCTSAgent& other);
     virtual ~MCTSAgent() = default;
@@ -29,8 +23,6 @@ public:
 
 private:
     static float EvalMetric(MCTSNode* node);
-    MCTSNode* (*node_select_function) (MCTSNode* node);
-    void (*node_update_function) (MCTSNode* node, BoardState state);
 
     std::pair<int, float> Run(const BoardData& board, std::string mode = "UCT") const;
     std::stack<MCTSNode*> Select(MCTSNode* root) const;

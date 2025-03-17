@@ -2,7 +2,7 @@
 #include "./BoardData.h"
 #include <cassert>
 
-MCTSNode::MCTSNode(BoardData board): state(board), parent(nullptr), child_index_in_parent(-1),
+MCTSNode::MCTSNode(BoardData board): child_index_in_parent(-1), state(board), parent(nullptr),
                                      fully_expanded(false) { }
 
 MCTSNode::~MCTSNode() {
@@ -26,13 +26,5 @@ void MCTSNode::ConnectChild(MCTSNode* new_node_ptr){
     new_node_ptr->parent = this;
     new_node_ptr->child_index_in_parent = this->children.size();
     this->children.push_back(new_node_ptr);
-}
-
-inline bool MCTSNode::IsFullyExpanded(){
-    return this->fully_expanded;
-}
-
-inline BoardData MCTSNode::GetState(){
-    return this->state;
 }
 

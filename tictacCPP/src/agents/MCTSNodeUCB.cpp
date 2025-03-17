@@ -12,6 +12,7 @@ MCTSNodeUCB::MCTSNodeUCB(BoardData board) : MCTSNode(board){
     static std::random_device rd;
     static std::mt19937 rnd_gen(rd());
     this->unexplored_moves = board.AvailableMoves();
+    if (this->unexplored_moves.size() == 0) this->fully_expanded = true;
     std::shuffle(this->unexplored_moves.begin(), this->unexplored_moves.end(), rnd_gen);
     this->total_played = 0;
 }
@@ -30,6 +31,7 @@ MCTSNode* MCTSNodeUCB::SelectMethod() const {
             this->child_data[i].total_played, this->total_played+1, 1.41421);
         if (ucb1 > largest_ucb1){
             largest_ucb1 = ucb1;
+            best_child = this->children[i];
         }
     }
     assert(best_child != nullptr);
@@ -44,6 +46,7 @@ void MCTSNodeUCB::UpdateMethod(BoardState result, int child_index) {
     } else { // P1 is on turn
         if (result == BoardState::WON_0)  this->child_data[child_index].player_on_turn_points += 1.0;
     }
+    this->child_data[child_index].total_played++;
     this->total_played++;
 }
 

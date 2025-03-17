@@ -19,8 +19,8 @@ public:
     virtual std::pair<int, float> GetMoveEval() = 0;
     //virtual std::vector<std::pair<int, float>> GetPolicy() = 0;
 
-    inline bool IsFullyExpanded();
-    inline BoardData GetState();
+    inline bool IsFullyExpanded() { return this->fully_expanded; }
+    inline BoardData GetState() { return this->state; }    
 
     MCTSNode* Parent() const;
     const std::vector<MCTSNode*>& ChildPointers() const;
