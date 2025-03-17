@@ -1,0 +1,8 @@
+-c
+-I./include
+-x
+c++
+-Wall
+-g
+--std=c++17
+-fdiagnostics-color=always

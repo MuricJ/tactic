@@ -1,0 +1,10 @@
+TODO:
+
+1. Optimize away symmetry
+2. Unit testing
+3. Multithreading
+4. Implement minimax + try combining
+5. Library fror experiments
+6. Reduce number of memory allocations, adjust memory model for multithreading
+7. Maybe remove state from nodes except leaf nodes? Depends on memory and multithreading model
+8. Also count losses in MCTS for a possibly more accurate eval metric
