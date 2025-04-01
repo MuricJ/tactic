@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <memory>
 #include <string>
+#include <chrono>
 #include "Engine.h"
 #include "agents/BasicStaticEval.h"
 #include "agents/ManualAgent.h"
@@ -31,10 +32,20 @@ int main(){
     //    out_stream.close();
     //}
     
-    Engine engine(std::make_unique<MCTSAgent>(1000000), std::make_unique<MCTSAgent>(1000000));
-    PlayoffResults res = engine.Playoff(1, false);
+    Engine engine(std::make_unique<MCTSAgent>(10000), std::make_unique<MCTSAgent>(10000));
+
+    auto start = std::chrono::high_resolution_clock::now();
+    int N = 10;
+    PlayoffResults res = engine.Playoff(N, false);
+    auto end = std::chrono::high_resolution_clock::now();
+
     std::cout << "Games: " << res.games << std::endl;
     std::cout << "WIN_0: " << res.won_P0 << std::endl;
     std::cout << "WIN_1: " << res.won_P1 << std::endl;
     std::cout << "DRAWS: " << res.draws << std::endl;
+
+    std::chrono::duration<double, std::milli> duration = end - start;
+    double ms = duration.count();
+    std::cout << "Simulated " << N << " playoffs in " << ms << "ms (" << ms/1000.0 << "s, "
+              <<  N/(ms*1000.0) << "M/s)" << std::endl;
 }

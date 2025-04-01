@@ -1,4 +1,5 @@
 #include <memory>
+#include <stdexcept>
 #include <vector>
 #include <random>
 #include "agents/RandomAgent.h"
@@ -26,7 +27,7 @@ void RandomAgent::reseed(){
 // This function is not thread-safe
 int RandomAgent::GetMove(const BoardData& board) const {
     std::vector<int> moves = board.AvailableMoves();
-    if (moves.size() == 0) return 81;
+    if (moves.size() == 0) throw std::logic_error("Tried to GetMove on terminal position");
     std::uniform_int_distribution<int> distribution(0, moves.size()-1);
     int index = distribution(this->random_generator);
     return moves[index];

@@ -23,8 +23,8 @@ std::vector<float> createInputVec(const BoardData& board){
     std::vector<float> out(81*3, 0.0);
     for (int b=0; b<9; b++){
         for (int i=0; i<9; i++){
-            if (board.cells0.test(9*b+i)) out[27*b+i] = 1.0;
-            if (board.cells1.test(9*b+i)) out[27*b+9+i] = 1.0;
+            //if (board.cells0.test(9*b+i)) out[27*b+i] = 1.0;
+            //if (board.cells1.test(9*b+i)) out[27*b+9+i] = 1.0;
         }
     }
     if(board.last_move_position < 81){
