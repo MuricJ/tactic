@@ -1,2 +1,6 @@
 .vscode/
-bin
+tictacCPP/bin
+tictacCPP/obj
+tictacCPP/models
+tictacCPP/datasets
+

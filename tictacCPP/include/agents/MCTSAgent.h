@@ -10,7 +10,7 @@
 
 class MCTSAgent : public Agent {
 public:
-    MCTSAgent(int iterations=10000);
+    MCTSAgent(int iterations=10000, std::string mode = "UCT");
     MCTSAgent(const MCTSAgent& other);
     MCTSAgent& operator=(const MCTSAgent& other);
     virtual ~MCTSAgent() = default;
@@ -24,12 +24,14 @@ public:
 private:
     static float EvalMetric(MCTSNode* node);
 
-    std::pair<int, float> Run(const BoardData& board, std::string mode = "UCT") const;
+    std::pair<int, float> Run(const BoardData& board) const;
     std::stack<MCTSNode*> Select(MCTSNode* root) const;
     void Backpropagate(std::stack<MCTSNode*>& path, BoardState result) const;
 
-    std::pair<int, float> RunUCT(const BoardData& board) const;
+    template <typename RootType>
+    std::pair<int, float> RunCustomRoot(const BoardData& board) const;
 
     Engine engine;
     int iterations;
+    std::string mode;
 };

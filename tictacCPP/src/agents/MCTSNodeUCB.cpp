@@ -9,8 +9,8 @@
 
 // parent == nullptr when creating the root node
 MCTSNodeUCB::MCTSNodeUCB(BoardData board) : MCTSNode(board){
-    static std::random_device rd;
-    static std::mt19937 rnd_gen(rd());
+    thread_local static std::random_device rd;
+    thread_local static std::mt19937 rnd_gen(rd());
     this->unexplored_moves = board.AvailableMoves();
     if (this->unexplored_moves.size() == 0) this->fully_expanded = true;
     std::shuffle(this->unexplored_moves.begin(), this->unexplored_moves.end(), rnd_gen);

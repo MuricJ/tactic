@@ -25,13 +25,12 @@ public:
     MCTSNode* Parent() const;
     const std::vector<MCTSNode*>& ChildPointers() const;
 
-    int child_index_in_parent;
+    int child_index_in_parent; // -1 for root
 
 protected:
     const BoardData state;
     MCTSNode* parent;
     std::vector<MCTSNode*> children;
-     // -1 for root
     bool fully_expanded;
     
 };

@@ -7,27 +7,31 @@
 #include "agents/MCTSAgent.h"
 #include "agents/MCTSNode.h"
 #include "agents/MCTSNodeUCB.h"
+#include "agents/MCTSNodeTS.h"
 #include "agents/RandomAgent.h"
 #include "Engine.h"
 #include "types.h"
 
-MCTSAgent::MCTSAgent(int iterations) : engine(std::make_unique<RandomAgent>(), std::make_unique<RandomAgent>()),
-                                       iterations(iterations) { }
+MCTSAgent::MCTSAgent(int iterations, std::string mode) : engine(std::make_unique<RandomAgent>(), std::make_unique<RandomAgent>()),
+                                       iterations(iterations), mode(mode) { }
 
 MCTSAgent::MCTSAgent(const MCTSAgent& other){
     *this = other;
 }
 
-std::pair<int, float> MCTSAgent::Run(const BoardData& board, std::string mode) const {
-    if (mode == "UCT") {
-        return this->RunUCT(board);
+std::pair<int, float> MCTSAgent::Run(const BoardData& board) const {
+    if (this->mode == "UCT") {
+        return this->RunCustomRoot<MCTSNodeUCB>(board);
+    } else if (mode == "TS"){
+        return this->RunCustomRoot<MCTSNodeTS>(board);
     } else {
-        throw std::domain_error("Invalid MCTSAgent mode: "+mode);
+        throw std::domain_error("Invalid MCTSAgent mode: " + mode);
     }
 }
 
-std::pair<int, float> MCTSAgent::RunUCT(const BoardData& board) const {
-    MCTSNode* root = new MCTSNodeUCB(board);
+template <typename RootType>
+std::pair<int, float> MCTSAgent::RunCustomRoot(const BoardData& board) const {
+    MCTSNode* root = new RootType(board);
     for (int i=0; i<this->iterations; i++){
         std::stack<MCTSNode*> path = this->Select(root);
         BoardState playoff_result = this->engine.SinglePlayoff(path.top()->GetState(), false);
