@@ -34,11 +34,11 @@ int main(){
 
     auto start = std::chrono::high_resolution_clock::now();
     int N = 100;
-    for (int i=0; i<17; i++){
-        for (int j=0; j<17; j++){
-            if ((j > 7 || i > 7) && std::abs(i-j) > 4) continue;
-            int i_iter = (int) std::pow(2.0, (float)i);
-            int j_iter = (int) std::pow(2.0, (float)j);
+    for (int i=0; i<20; i++){
+        for (int j=0; j<20; j++){
+            if ((j > 7 || i > 7) && std::abs(i-j) > 5) continue;
+            int i_iter = (int) std::pow(2, (float)i);
+            int j_iter = (int) std::pow(2, (float)j);
             Engine engine1(std::make_unique<MCTSAgent>(i_iter, "UCT"), std::make_unique<MCTSAgent>(j_iter, "TS"));
             PlayoffResults res1 = engine1.Playoff(N/2, false);
             Engine engine2(std::make_unique<MCTSAgent>(j_iter, "TS"), std::make_unique<MCTSAgent>(i_iter, "UCT"));
