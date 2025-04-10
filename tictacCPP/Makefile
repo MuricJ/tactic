@@ -3,7 +3,7 @@ CC = clang++
 ODIR = obj
 SDIR = src
 INC = -I./include -I/usr/include
-CFLAGS = -x c++ -Wall -O3 -DNDEBUG --std=c++17 -fdiagnostics-color=always
+CFLAGS = -x c++ -Wall -O3 --std=c++20 -fdiagnostics-color=always
 LINKFLAGS = -L /usr/lib -ltorch -ltorch_cpu -lc10 -Wl,-rpath,/usr/lib
 SANITY = -fsanitize=address,undefined,leak,bounds,float-divide-by-zero,float-cast-overflow,nullability,alignment,integer -fno-sanitize=unsigned-shift-base -fno-omit-frame-pointer -fstack-protector-all
 

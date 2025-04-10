@@ -17,6 +17,7 @@ public:
 
     virtual int GetMove(const BoardData& board) const;
     std::pair<int, float> GetMoveEval(const BoardData& board) const;
+    std::tuple<int, float, std::vector<std::vector<float>>> GetMoveEvalPolicy(const BoardData& board) const;
     float GetEval(const BoardData& board) const;
 
     virtual std::unique_ptr<Agent> clone() const;
@@ -24,12 +25,12 @@ public:
 private:
     static float EvalMetric(MCTSNode* node);
 
-    std::pair<int, float> Run(const BoardData& board) const;
+    std::tuple<int, float, std::vector<std::vector<float>>> Run(const BoardData& board) const;
     std::stack<MCTSNode*> Select(MCTSNode* root) const;
     void Backpropagate(std::stack<MCTSNode*>& path, BoardState result) const;
 
     template <typename RootType>
-    std::pair<int, float> RunCustomRoot(const BoardData& board) const;
+    std::tuple<int, float, std::vector<std::vector<float>>> RunCustomRoot(const BoardData& board) const;
 
     Engine engine;
     int iterations;

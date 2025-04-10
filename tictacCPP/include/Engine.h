@@ -3,7 +3,6 @@
 #include <fstream>
 #include <memory>
 #include <mutex>
-#include <thread>
 #include "BoardData.h"
 #include "agents/Agent.h"
 
@@ -26,6 +25,9 @@ public:
     BoardState SinglePlayoff(BoardData start_board, bool display=false) const;
     PlayoffResults Playoff(const BoardData& start_board, int n, bool display=false) const;
     PlayoffResults Playoff(int n, bool display=false) const;
+    void PlayoffWorker(const BoardData& start_board, int n, PlayoffResults& total_results, std::mutex& write_mutex) const;
+    PlayoffResults PlayoffThreaded(const BoardData& start_board, int n, int n_threads) const;
+    PlayoffResults PlayoffThreaded(int n, int n_threads) const;
     void GenerateValueDatasetWorker(int games, int initial_random_moves, std::ofstream& out_stream, std::mutex& write_mutex, int &progress_counter) const;
     std::unique_ptr<Engine> clone() const;
 private:

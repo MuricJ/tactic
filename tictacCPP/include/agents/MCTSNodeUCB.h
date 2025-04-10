@@ -18,6 +18,7 @@ public:
     virtual MCTSNode* ExpandMethod() override; 
     virtual void UpdateMethod(BoardState result, int child_index) override;
     std::pair<int, float> GetMoveEval() override;
+    std::vector<std::vector<float>> GetPolicy() const override;;
 
     std::vector<int> unexplored_moves;
     int total_played;

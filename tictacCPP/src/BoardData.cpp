@@ -24,7 +24,7 @@ BoardData::BoardData(std::string state_str, int last_move) {
     assert(last_move <= 81 && last_move >= 0);
     this->Clear();
     this->last_move_position = last_move;
-
+    int move_num = 0;
     for (int i = 0; i < 81; i++) {
         int board = i / 9;
         uint64_t mask = 1ULL << i;
@@ -35,14 +35,18 @@ BoardData::BoardData(std::string state_str, int last_move) {
             } else {
                 bitboard2 |= (1ULL << (i - 36)); // Player 0 (X) for boards 7-8
             }
+            move_num++;
         } else if (state_str[i] == 'O') {
             if (board < 7) {
                 bitboard1 |= mask; // Player 1 (O) for boards 0-6
             } else {
                 bitboard2 |= (1ULL << (i - 18)); // Player 1 (O) for boards 7-8
             }
+            move_num++;
         }
     }
+
+    this->move_number = move_num;
 
     // Recalculate bitboard2 for big board state (wins/draws)
     for (int board = 0; board < 9; board++) {
@@ -56,6 +60,7 @@ BoardData::BoardData(std::string state_str, int last_move) {
             bitboard2 |= (1ULL << (board + 18)); // Board is a draw
         }
     }
+
 }
 
 float BoardData::basicStaticEval() const {
@@ -204,7 +209,7 @@ BoardState BoardData::State() const {
 }
 
 std::vector<int> BoardData::AvailableMoves() const {
-    static const std::vector<int> first_move_list = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 
+    static const std::vector<int> first_move_list = {0,1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 
                                                     21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 
                                                     39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 
                                                     57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 

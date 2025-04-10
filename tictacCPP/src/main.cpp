@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include <chrono>
+#include <format>
 #include <cmath>
 #include "Engine.h"
 #include "agents/BasicStaticEval.h"
@@ -15,51 +16,53 @@
 #include "dataset.h"
 
 int main(){
+    //std::ofstream outmat("outmatrix.csv");
+    //GenerateComparisonMatrix(128, 16, outmat);
+    //outmat.close();
+    //std::cout<< "DONE!!!" << std::endl;
+    //exit(0);
+   
     //std::unique_ptr<StaticEval> nn_eval1 = std::make_unique<NNStaticEval>("/home/jan/Documents/Repositories/tictac/tictacCPP/models/last_model_res99.pt");
     //std::unique_ptr<StaticEval> nn_eval2 = std::make_unique<NNStaticEval>("/home/jan/Documents/Repositories/tictac/tictacCPP/models/last_model_RND31.pt");
     //std::unique_ptr<StaticEval> basic_eval = std::make_unique<BasicStaticEval>();
     //BoardData bo("--X-XX-O----O-X-XOOX--O-O-O--XXO-O-XX-XOOXXXOOOO-OX--O-OXXX--X-O---OXO---X-OXXO-X", 35);
-    //std::cout << nn_eval1->Value(bo) << std::endl;
+    //auto agentTS = MCTSAgent(1000, "TS");
+    //BoardData bo("X---OOO-XXXXX-XXO-XOO--OXXO-OXO-X--X-OO-X-----OXX-OXO--OXO--OXX---O-XO-XOOO------", 4);
+    //std::cout << agentTS.GetMoveEval(bo) << std::endl;
 
 
     
     
-    //auto my_agent = std::make_unique<MCTSAgent>(1000000);
-    //for (int i=1; i<55; i++){
-    //    std::cout << i << "\n";
-    //    std::ofstream out_stream("dataset_1MRND_part_" + std::to_string(i) + ".csv");
-    //    GenerateDataset(my_agent->clone(), 5000, i, out_stream, 16);
-    //    out_stream.close();
-    //};
+    auto my_agent = std::make_unique<MCTSAgent>(500000, "TS");
+    
+    for (int i=40; i<100000; i++){
+        i = i%56;
+        std::cout << i << "\n";
+        auto now = std::chrono::system_clock::now();
+        std::string formatted_time = std::format("{:%Y%m%d%H%M%S}", now);
+        std::ofstream out_stream("dataset_500kRND_TS_part_" + std::to_string(i) + "_" + formatted_time + ".csv");
+        GenerateDataset(my_agent->clone(), 1000, i, out_stream, 16);
+        out_stream.close();
+    };
 
-    auto start = std::chrono::high_resolution_clock::now();
-    int N = 100;
-    for (int i=0; i<20; i++){
-        for (int j=0; j<20; j++){
-            if ((j > 7 || i > 7) && std::abs(i-j) > 5) continue;
-            int i_iter = (int) std::pow(2, (float)i);
-            int j_iter = (int) std::pow(2, (float)j);
-            Engine engine1(std::make_unique<MCTSAgent>(i_iter, "UCT"), std::make_unique<MCTSAgent>(j_iter, "TS"));
-            PlayoffResults res1 = engine1.Playoff(N/2, false);
-            Engine engine2(std::make_unique<MCTSAgent>(j_iter, "TS"), std::make_unique<MCTSAgent>(i_iter, "UCT"));
-            PlayoffResults res2 = engine2.Playoff(N/2, false);
-            int won_uct = res1.won_P0 + res2.won_P1;
-            int won_ts = res1.won_P1 + res2.won_P0;
-            std::cout << i_iter << "," << j_iter << "," << won_ts << "," << won_uct << "," << N << std::endl;
-        }
-    }
-    exit(0);
-    Engine engine(std::make_unique<MCTSAgent>(6000, "UCT"), std::make_unique<MCTSAgent>(1500, "TS"));
-    PlayoffResults res = engine.Playoff(N, false);
-    auto end = std::chrono::high_resolution_clock::now();
+    
+    // int N = 25;
 
-    std::cout << "Games: " << res.games << std::endl;
-    std::cout << "WIN_0: " << res.won_P0 << std::endl;
-    std::cout << "WIN_1: " << res.won_P1 << std::endl;
-    std::cout << "DRAWS: " << res.draws << std::endl;
+    // Engine engine1(std::make_unique<MCTSAgent>(1000000, "TS"), std::make_unique<MCTSAgent>(1000000, "TSBiased"));
+    // Engine engine2(std::make_unique<MCTSAgent>(1000000, "TSBiased"), std::make_unique<MCTSAgent>(1000000, "TS"));
+    // auto start = std::chrono::high_resolution_clock::now();
+    // PlayoffResults res1 = engine1.PlayoffThreaded(N, 16);
+    // std::cout << "Half" << std::endl;
+    // PlayoffResults res2 = engine2.PlayoffThreaded(N, 16);
+    // auto end = std::chrono::high_resolution_clock::now();
 
-    std::chrono::duration<double, std::milli> duration = end - start;
-    double ms = duration.count();
-    std::cout << "Simulated " << N << " playoffs in " << ms << "ms (" << ms/1000.0 << "s, "
-              <<  N/(ms*1000.0) << "M/s)" << std::endl;
+    // std::cout << "Games: " << res1.games  + res2.games << std::endl;
+    // std::cout << "WINa: " << res1.won_P0 + res2.won_P1 << std::endl;
+    // std::cout << "WINb: " << res1.won_P1 + res2.won_P0<< std::endl;
+    // std::cout << "DRAWS: " << res1.draws + res2.draws << std::endl;
+
+    // std::chrono::duration<double, std::milli> duration = end - start;
+    // double ms = duration.count();
+    // std::cout << "Simulated " << N << " playoffs in " << ms << "ms (" << ms/1000.0 << "s, "
+    //           <<  N/(ms*1000.0) << "M/s)" << std::endl;
 }

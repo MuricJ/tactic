@@ -19,7 +19,7 @@ MCTSAgent::MCTSAgent(const MCTSAgent& other){
     *this = other;
 }
 
-std::pair<int, float> MCTSAgent::Run(const BoardData& board) const {
+std::tuple<int, float, std::vector<std::vector<float>>> MCTSAgent::Run(const BoardData& board) const {
     if (this->mode == "UCT") {
         return this->RunCustomRoot<MCTSNodeUCB>(board);
     } else if (mode == "TS"){
@@ -30,7 +30,7 @@ std::pair<int, float> MCTSAgent::Run(const BoardData& board) const {
 }
 
 template <typename RootType>
-std::pair<int, float> MCTSAgent::RunCustomRoot(const BoardData& board) const {
+std::tuple<int, float, std::vector<std::vector<float>>> MCTSAgent::RunCustomRoot(const BoardData& board) const {
     MCTSNode* root = new RootType(board);
     for (int i=0; i<this->iterations; i++){
         std::stack<MCTSNode*> path = this->Select(root);
@@ -38,8 +38,9 @@ std::pair<int, float> MCTSAgent::RunCustomRoot(const BoardData& board) const {
         this->Backpropagate(path, playoff_result);
     }
     auto move_eval = root->GetMoveEval();
+    std::vector<std::vector<float>> policy = root->GetPolicy();
     delete root;
-    return move_eval;
+    return std::make_tuple(move_eval.first, move_eval.second, policy);
 }
 
 float MCTSAgent::GetEval(const BoardData& board) const {
@@ -51,6 +52,11 @@ int MCTSAgent::GetMove(const BoardData& board) const{
 }
 
 std::pair<int, float> MCTSAgent::GetMoveEval(const BoardData& board) const{
+    std::tuple<int, float, std::vector<std::vector<float>>> res = this->Run(board);
+    return std::make_pair(std::get<0>(res), std::get<1>(res));
+}
+
+std::tuple<int, float, std::vector<std::vector<float>>> MCTSAgent::GetMoveEvalPolicy(const BoardData& board) const {
     return this->Run(board);
 }
 
@@ -95,5 +101,6 @@ std::unique_ptr<Agent> MCTSAgent::clone() const{
 MCTSAgent& MCTSAgent::operator=(const MCTSAgent& other){
     this->engine = other.engine;
     this->iterations = other.iterations;
+    this->mode = other.mode;
     return *this;
 }

@@ -17,7 +17,7 @@ public:
     virtual void UpdateMethod(BoardState result, int child_index) = 0;
     virtual MCTSNode* ExpandMethod() = 0; // must set fully_expanded flag when necessary
     virtual std::pair<int, float> GetMoveEval() = 0;
-    //virtual std::vector<std::pair<int, float>> GetPolicy() = 0;
+    virtual std::vector<std::vector<float>> GetPolicy() const = 0;
 
     inline bool IsFullyExpanded() { return this->fully_expanded; }
     inline BoardData GetState() { return this->state; }    

@@ -12,8 +12,11 @@ MCTSNodeUCB::MCTSNodeUCB(BoardData board) : MCTSNode(board){
     thread_local static std::random_device rd;
     thread_local static std::mt19937 rnd_gen(rd());
     this->unexplored_moves = board.AvailableMoves();
-    if (this->unexplored_moves.size() == 0) this->fully_expanded = true;
-    std::shuffle(this->unexplored_moves.begin(), this->unexplored_moves.end(), rnd_gen);
+    if (this->unexplored_moves.size() == 0){
+        this->fully_expanded = true;
+    } else {
+        std::shuffle(this->unexplored_moves.begin(), this->unexplored_moves.end(), rnd_gen);
+    }
     this->total_played = 0;
 }
 
@@ -88,4 +91,12 @@ std::pair<int, float> MCTSNodeUCB::GetMoveEval(){
     best_move_eval = 2*best_move_eval-1;
     if (player == 0) best_move_eval *= -1; // eval_metric is the win rate of the child (opposite player)
     return std::make_pair(best_move, best_move_eval);
+}
+
+std::vector<std::vector<float>> MCTSNodeUCB::GetPolicy() const {
+    std::vector<std::vector<float>> policy;
+    for (UCBData i : this->child_data){
+        policy.push_back(std::vector<float>({i.player_on_turn_points/i.total_played}));
+    }
+    return policy;
 }
